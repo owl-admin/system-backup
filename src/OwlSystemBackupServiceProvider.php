@@ -25,6 +25,7 @@ class OwlSystemBackupServiceProvider extends ServiceProvider
                         ['label' => '管理员', 'value' => 'admin'],
                         ['label' => '设置', 'value' => 'setting'],
                         ['label' => '扩展', 'value' => 'extension'],
+                        ['label' => '代码生成记录', 'value' => 'code_builder'],
                     ])->required(),
                     amisMake()->Flex()->justify('end')->items([
                         amis('submit')->label('添加备份')->level('success'),

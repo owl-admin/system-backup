@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Slowlyo\OwlAdmin\Models\Extension;
 use Slowlyo\OwlAdmin\Models\AdminSetting;
+use Slowlyo\OwlAdmin\Models\AdminCodeGenerator;
 use Slowlyo\OwlAdmin\Controllers\AdminController;
 
 class OwlSystemBackupController extends AdminController
@@ -18,12 +19,13 @@ class OwlSystemBackupController extends AdminController
         $this->initDir();
 
         $needs = [
-            'menu'       => '菜单',
-            'permission' => '权限',
-            'role'       => '角色',
-            'admin'      => '管理员',
-            'setting'    => '设置',
-            'extension'  => '扩展',
+            'menu'         => '菜单',
+            'permission'   => '权限',
+            'role'         => '角色',
+            'admin'        => '管理员',
+            'setting'      => '设置',
+            'extension'    => '扩展',
+            'code_builder' => '代码生成记录',
         ];
 
         $backups = collect(scandir(storage_path($this->path)))
@@ -61,8 +63,8 @@ class OwlSystemBackupController extends AdminController
         if (in_array('permission', $needs)) {
             $backup['permission'] = Admin::adminPermissionModel()::query()->get();
 
-            if(in_array('menu', $needs)){
-                $_model = Admin::adminPermissionModel();
+            if (in_array('menu', $needs)) {
+                $_model                    = Admin::adminPermissionModel();
                 $backup['permission_menu'] = DB::table((new $_model)->menus()->getTable())->get();
             }
         }
@@ -70,8 +72,8 @@ class OwlSystemBackupController extends AdminController
         if (in_array('role', $needs)) {
             $backup['role'] = Admin::adminRoleModel()::query()->get();
 
-            if(in_array('permission', $needs)){
-                $_model = Admin::adminRoleModel();
+            if (in_array('permission', $needs)) {
+                $_model                    = Admin::adminRoleModel();
                 $backup['role_permission'] = DB::table((new $_model)->permissions()->getTable())->get();
             }
         }
@@ -79,8 +81,8 @@ class OwlSystemBackupController extends AdminController
         if (in_array('admin', $needs)) {
             $backup['admin'] = Admin::adminUserModel()::query()->get();
 
-            if(in_array('role', $needs)){
-                $_model = Admin::adminUserModel();
+            if (in_array('role', $needs)) {
+                $_model               = Admin::adminUserModel();
                 $backup['admin_role'] = DB::table((new $_model)->roles()->getTable())->get();
             }
         }
@@ -91,6 +93,10 @@ class OwlSystemBackupController extends AdminController
 
         if (in_array('extension', $needs)) {
             $backup['extension'] = Extension::get();
+        }
+
+        if (in_array('code_builder', $needs)) {
+            $backup['code_builder'] = AdminCodeGenerator::get();
         }
 
         $backup['options'] = [
@@ -171,6 +177,12 @@ class OwlSystemBackupController extends AdminController
             Extension::unguard();
             Extension::query()->truncate();
             array_map(fn($item) => Extension::create($item), $content['extension']);
+        }
+
+        if (Arr::has($content, 'code_builder')) {
+            AdminCodeGenerator::unguard();
+            AdminCodeGenerator::query()->truncate();
+            array_map(fn($item) => AdminCodeGenerator::create($item), $content['code_builder']);
         }
 
         return $this->response()->successMessage('恢复成功');
