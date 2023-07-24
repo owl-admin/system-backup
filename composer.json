@@ -1,0 +1,32 @@
+{
+    "name": "slowlyo/owl-system-backup",
+    "alias": "系统备份",
+    "description": "Owl Admin 系统备份扩展",
+    "type": "library",
+    "keywords": ["owl-admin", "extension"],
+    "homepage": "https://github.com/slowlyo/owl-system-backup",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "slowlyo",
+            "email": "slowlyo_email@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "slowlyo/owl-admin": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Slowlyo\\OwlSystemBackup\\": "src/"
+        }
+    },
+    "extra": {
+        "owl-admin": "Slowlyo\\OwlSystemBackup\\OwlSystemBackupServiceProvider",
+        "laravel": {
+            "providers": [
+                "Slowlyo\\OwlSystemBackup\\OwlSystemBackupServiceProvider"
+            ]
+        }
+    }
+}
