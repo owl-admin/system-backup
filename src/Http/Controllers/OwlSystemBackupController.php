@@ -12,7 +12,7 @@ use Slowlyo\OwlAdmin\Controllers\AdminController;
 
 class OwlSystemBackupController extends AdminController
 {
-    private string $path = 'app/backup';
+    private string $path = 'backup';
 
     public function index()
     {
