@@ -64,7 +64,7 @@ class OwlSystemBackupController extends AdminController
             $backup['permission'] = Admin::adminPermissionModel()::query()->get();
 
             if (in_array('menu', $needs)) {
-                $_model                    = Admin::adminPermissionModel();
+                $_model = Admin::adminPermissionModel();
                 $backup['permission_menu'] = DB::table((new $_model)->menus()->getTable())->get();
             }
         }
@@ -73,16 +73,16 @@ class OwlSystemBackupController extends AdminController
             $backup['role'] = Admin::adminRoleModel()::query()->get();
 
             if (in_array('permission', $needs)) {
-                $_model                    = Admin::adminRoleModel();
+                $_model = Admin::adminRoleModel();
                 $backup['role_permission'] = DB::table((new $_model)->permissions()->getTable())->get();
             }
         }
 
         if (in_array('admin', $needs)) {
-            $backup['admin'] = Admin::adminUserModel()::query()->get();
+            $backup['admin'] = Admin::adminUserModel()::query()->get()->makeHidden(['administrator', 'roles']);
 
             if (in_array('role', $needs)) {
-                $_model               = Admin::adminUserModel();
+                $_model = Admin::adminUserModel();
                 $backup['admin_role'] = DB::table((new $_model)->roles()->getTable())->get();
             }
         }
@@ -198,7 +198,7 @@ class OwlSystemBackupController extends AdminController
     public function getContent($path)
     {
         $fileContent = file_get_contents(storage_path($this->path . '/' . $path));
-        $content     = json_decode($fileContent, true);
+        $content = json_decode($fileContent, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             $content = json_decode(admin_decode($fileContent), true);
